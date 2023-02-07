@@ -33,10 +33,16 @@ public class Order  {
 
 
         capstoneorderteam.external.Pay pay = new capstoneorderteam.external.Pay();
+        
+        pay.setPrice(price);
+        pay.setStatus(status);
+        pay.setItemcd(itemcd);
+        pay.setOrderQty(orderQty);
+        pay.setOrderId(id);
+
         // mappings goes here
         OrderApplication.applicationContext.getBean(capstoneorderteam.external.PayService.class)
             .approvePayment(pay);
-
 
         Ordered ordered = new Ordered(this);
         ordered.publishAfterCommit();

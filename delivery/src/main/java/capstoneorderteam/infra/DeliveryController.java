@@ -20,7 +20,45 @@ public class DeliveryController {
     DeliveryRepository deliveryRepository;
 
 
+    @RequestMapping(value = "deliveries/{id}/deliverystarted", method = RequestMethod.POST)
+    public Delivery deliveryStarted(@PathVariable Long id, @RequestBody Delivery delivery, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        System.out.println("##### deliverystarted #####");
+        Optional<Delivery> optionalDelivery = deliveryRepository.findById(id);
 
+        optionalDelivery.orElseThrow(() -> new Exception("No Entity Found"));
+        Delivery d = optionalDelivery.get();
+        d.setStatus("deliverystarted");
+
+        deliveryRepository.save(d);
+
+        
+
+        DeliveryStarted deliveryStarted = new DeliveryStarted();
+        deliveryStarted.setId(d.getId());
+        deliveryStarted.publishAfterCommit();
+
+        return d;
+    }
+
+    @RequestMapping(value = "deliveries/{id}/deliverycompleted", method = RequestMethod.POST)
+    public Delivery deliveryCompleted(@PathVariable Long id, @RequestBody Delivery delivery, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        System.out.println("##### deliverycompleted #####");
+        Optional<Delivery> optionalDelivery = deliveryRepository.findById(id);
+
+        optionalDelivery.orElseThrow(() -> new Exception("No Entity Found"));
+        Delivery d = optionalDelivery.get();
+        d.setStatus("deliverycompleted");
+
+        deliveryRepository.save(d);
+
+        
+        DeliveryCompleted deliveryCompleted = new DeliveryCompleted();
+        deliveryCompleted.setId(d.getId());
+        deliveryCompleted.publishAfterCommit();
+
+        
+        return d;
+    }
 
 
 }

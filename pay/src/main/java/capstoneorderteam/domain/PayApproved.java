@@ -16,6 +16,7 @@ public class PayApproved extends AbstractEvent {
     private Integer itemcd;
     private Integer orderQty;
     private Long orderId;
+    private String address;
 
     public PayApproved(Pay aggregate){
         super(aggregate);

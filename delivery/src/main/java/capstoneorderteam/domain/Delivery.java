@@ -74,23 +74,11 @@ public class Delivery  {
     public void onPostPersist(){
 
 
-        DeliveryCanceled deliveryCanceled = new DeliveryCanceled(this);
-        deliveryCanceled.publishAfterCommit();
+        
 
 
 
-        DeliveryCompleted deliveryCompleted = new DeliveryCompleted(this);
-        deliveryCompleted.publishAfterCommit();
 
-
-
-        DeliveryStarted deliveryStarted = new DeliveryStarted(this);
-        deliveryStarted.publishAfterCommit();
-
-
-
-        DeliveryRequested deliveryRequested = new DeliveryRequested(this);
-        deliveryRequested.publishAfterCommit();
 
     }
 
@@ -104,11 +92,22 @@ public class Delivery  {
 
     public static void requestDelivery(DeliveryPrepared deliveryPrepared){
 
-        /** Example 1:  new item 
+        
         Delivery delivery = new Delivery();
+        delivery.setStatus("deliveryRequested");
+        delivery.setAddress(deliveryPrepared.getAddress());
+        delivery.setOrderId(deliveryPrepared.getOrderId());
+        delivery.setQtyp(deliveryPrepared.getOrderQty());
         repository().save(delivery);
 
-        */
+        DeliveryRequested deliveryRequested = new DeliveryRequested();
+
+        deliveryRequested.setStatus("deliveryRequested");
+        deliveryRequested.setAddress(deliveryPrepared.getAddress());
+        deliveryRequested.setOrderId(deliveryPrepared.getOrderId());
+        deliveryRequested.setQtyp(deliveryPrepared.getOrderQty());
+
+        deliveryRequested.publishAfterCommit();
 
         /** Example 2:  finding and process
         
@@ -125,11 +124,22 @@ public class Delivery  {
     }
     public static void cancelDelivery(PayCanceled payCanceled){
 
-        /** Example 1:  new item 
+        
         Delivery delivery = new Delivery();
+        delivery.setStatus("deliveryCanceled");
+        //delivery.setAddress(payCanceled.getAddress());
+        delivery.setOrderId(payCanceled.getOrderId());
+        delivery.setQtyp(payCanceled.getOrderQty());
         repository().save(delivery);
 
-        */
+        
+
+        DeliveryCanceled deliveryCanceled = new DeliveryCanceled();
+        deliveryCanceled.setStatus("deliveryCanceled");
+        //deliveryCanceled.setAddress(payCanceled.getAddress());
+        deliveryCanceled.setOrderId(payCanceled.getOrderId());
+        deliveryCanceled.setQtyp(payCanceled.getOrderQty());
+        deliveryCanceled.publishAfterCommit();
 
         /** Example 2:  finding and process
         
@@ -146,11 +156,21 @@ public class Delivery  {
     }
     public static void cancelDelivery(OrderCanceled orderCanceled){
 
-        /** Example 1:  new item 
+        
         Delivery delivery = new Delivery();
+        delivery.setStatus("deliveryCanceled");
+        //delivery.setAddress(payCanceled.getAddress());
+        delivery.setOrderId(orderCanceled.getId());
+        delivery.setQtyp(orderCanceled.getOrderQty());
         repository().save(delivery);
 
-        */
+        DeliveryCanceled deliveryCanceled = new DeliveryCanceled();
+        deliveryCanceled.setStatus("deliveryCanceled");
+        //deliveryCanceled.setAddress(payCanceled.getAddress());
+        deliveryCanceled.setOrderId(orderCanceled.getId());
+        deliveryCanceled.setQtyp(orderCanceled.getOrderQty());
+        deliveryCanceled.publishAfterCommit();
+
 
         /** Example 2:  finding and process
         
