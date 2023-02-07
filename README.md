@@ -168,9 +168,30 @@
   - Istio를 구성하여 Service Mesh 구현
   - Istio는 sidecar 패턴을 이용하여 pod내에 별도의 역할을 하는 container 주입(injection)
 
+```
+< 구성절차 >
+1) curl -L https://istio.io/downloadIstio | ISTIO_VERSION=$ISTIO_VERSION TARGET_ARCH=x86_64 sh –   // download Istio
+2) istioctl install --set profile=demo --set hub=gcr.io/istio-release                              // istioctl을 통하여 설치
+3) kubectl label namespace default istio-injection=enabled                                         // injection 대상 namespace 설정 (본 pjt에서는 default NS 이용)
+
+
+-- injection용 Namespace 설정후 확인
+![image](https://user-images.githubusercontent.com/119907154/217383342-e54e607a-a7fe-4be1-8a04-5c2268bd5836.png)
+
+
+
+4) kubectl apply -f samples/addons                                                                 // kiali / prometheus / grafana 를 위한 애드온 설치
+
+```
+
+
+
+
+
 
 
 ## Loggregation / Monitoring 
+
 
 
 
