@@ -79,16 +79,15 @@ public class Order  {
 
         */
 
-        /** Example 2:  finding and process
-        
-        repository().findById(deliveryPrepared.get???()).ifPresent(order->{
+              
+        repository().findById(deliveryPrepared.getOrderId()).ifPresent(order->{
             
-            order // do something
+            order.setStatus("deliveryPrepared");
             repository().save(order);
 
 
          });
-        */
+      
 
         
     }
