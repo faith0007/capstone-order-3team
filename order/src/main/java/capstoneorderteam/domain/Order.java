@@ -14,46 +14,15 @@ import java.util.Date;
 @Data
 
 public class Order  {
-
-
     
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    
-    
-    
-    
-    
+
     private Long id;
-    
-    
-    
-    
-    
     private String item;
-    
-    
-    
-    
-    
     private Integer orderQty;
-    
-    
-    
-    
-    
     private String status;
-    
-    
-    
-    
-    
     private Long price;
-    
-    
-    
-    
-    
     private Integer itemcd;
 
     @PostPersist
@@ -73,13 +42,17 @@ public class Order  {
         ordered.publishAfterCommit();
 
     }
-    @PreRemove
-    public void onPreRemove(){
 
+    @PostUpdate
+    public void onPostUpdate(){
 
         OrderCanceled orderCanceled = new OrderCanceled(this);
         orderCanceled.publishAfterCommit();
 
+    }
+
+    @PreRemove
+    public void onPreRemove(){
     }
 
     public static OrderRepository repository(){
