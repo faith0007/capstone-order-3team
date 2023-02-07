@@ -238,7 +238,7 @@ $ kubectl get service -n istio-system
 
   - grafana 연동 (metric from prometheus)
 
-![image](https://user-images.githubusercontent.com/119907154/217389483-4a2fd823-5611-4cc4-8da1-16af52d312a9.png)
+![image](https://user-images.githubusercontent.com/119907154/217389760-1cb57ac0-e7f6-4d14-b7b7-6b7543da4027.png)
 
 
 
