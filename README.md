@@ -206,7 +206,7 @@ $ kubectl get service -n istio-system
 ![image](https://user-images.githubusercontent.com/119907154/217384306-099f7bad-ad25-4cf8-9ccd-5316a6593cf5.png)
 
 
-## Log Agregation / Monitoring 
+## Log Agregation / Monitoring
 
 
 
