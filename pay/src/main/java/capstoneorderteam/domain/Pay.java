@@ -76,12 +76,6 @@ public class Pay  {
         return payRepository;
     }
 
-    public void approvePayment(Pay){
-
-    }
-
-
-
 
     public static void cancelPayment(OrderCanceled orderCanceled){
 
