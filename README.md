@@ -8,20 +8,21 @@
 
 - [상품주문시스템](#---)
   - [서비스 시나리오](#서비스-시나리오)
-  - [체크포인트](#체크포인트)
   - [분석/설계](#분석설계)
   - [구현:](#구현-)
-    - [DDD 의 적용](#ddd-의-적용)
-    - [폴리글랏 퍼시스턴스](#폴리글랏-퍼시스턴스)
-    - [폴리글랏 프로그래밍](#폴리글랏-프로그래밍)
-    - [동기식 호출 과 Fallback 처리](#동기식-호출-과-Fallback-처리)
-    - [비동기식 호출 과 Eventual Consistency](#비동기식-호출-과-Eventual-Consistency)
+    - [Saga (Pub-Sub)]
+    - [CQRS]
+    - [Compensation & Correlation]
   - [운영](#운영)
-    - [Gateway / Ingress](# Gateway / Ingress)
-    - [동기식 호출 / 서킷 브레이킹 / 장애격리](#Gateway / Ingress)
-    - [오토스케일 아웃](#오토스케일-아웃)
-    - [무정지 재배포](#무정지-재배포)
-  - [신규 개발 조직의 추가](#신규-개발-조직의-추가)
+    - [Gateway / Ingress]
+    - [Deploy / Pipeline]
+    - [Autoscale (HPA)]
+    - [Zero-downtime deploy (Readiness probe)]
+    - [Persistence volume / ConfigMap / Secret]
+    - [Self-healing (liveness probe)]
+    - [Apply Service Mesh]
+    - [Log aggregation / Monitoring]
+
 
 # 서비스 시나리오
 
@@ -137,7 +138,7 @@
 
 
 
-# Gateway / Ingress
+## Gateway / Ingress
 
 
 
