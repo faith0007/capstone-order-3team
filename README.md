@@ -1,4 +1,4 @@
-# [SDS] Developing Cloud Native Application Full Course 2023   - CAPSTONE pjt. team 3.
+# [SDS] CAPSTONE pjt. team 3.
 
 
 # 주제 - 상품주문시스템
