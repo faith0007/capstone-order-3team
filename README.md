@@ -167,27 +167,42 @@
 
   - Istio를 구성하여 Service Mesh 구현
   - Istio는 sidecar 패턴을 이용하여 pod내에 별도의 역할을 하는 container 주입(injection)
+  - kiali를 통해 Service Messh 구성 확인
 
 ```
 < 구성절차 >
 1) curl -L https://istio.io/downloadIstio | ISTIO_VERSION=$ISTIO_VERSION TARGET_ARCH=x86_64 sh –   // download Istio
 2) istioctl install --set profile=demo --set hub=gcr.io/istio-release                              // istioctl을 통하여 설치
 3) kubectl label namespace default istio-injection=enabled                                         // injection 대상 namespace 설정 (본 pjt에서는 default NS 이용)
-
-
--- injection용 Namespace 설정후 확인
-![image](https://user-images.githubusercontent.com/119907154/217383342-e54e607a-a7fe-4be1-8a04-5c2268bd5836.png)
-
-
-
 4) kubectl apply -f samples/addons                                                                 // kiali / prometheus / grafana 를 위한 애드온 설치
+5) kubectl patch svc kiali -n istio-system -p '{"spec": {"type": "LoadBalancer"}}'                 // kiali 접근을 위한 IP 외부노출
+
 
 ```
 
+  - injection용 Namespace 설정후 확인
+  
+```
+$ kubectl get ns -L istio-injection
+```
+
+![image](https://user-images.githubusercontent.com/119907154/217383342-e54e607a-a7fe-4be1-8a04-5c2268bd5836.png)
 
 
+  - kiali 접근 URL 확인 (로드밸런서 타입으로 외부노출 후)
+
+```
+$ kubectl get service -n istio-system
+
+```
+
+![image](https://user-images.githubusercontent.com/119907154/217384012-fb6da3dc-27c9-4396-917d-35b20231dc7f.png)
 
 
+  - kiali를 실행하여  구성 확인
+    - default NS 에 6개 Application및 health 확인
+
+![image](https://user-images.githubusercontent.com/119907154/217384306-099f7bad-ad25-4cf8-9ccd-5316a6593cf5.png)
 
 
 ## Loggregation / Monitoring 
