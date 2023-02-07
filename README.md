@@ -21,7 +21,7 @@
     - [Persistence volume / ConfigMap / Secret]
     - [Self-healing (liveness probe)]
     - [Apply Service Mesh](#apply-service-Messh)
-    - [Log aggregation / Monitoring]
+    - [Log aggregation / Monitoring](#log-agregation-/-monitoring)
 
 
 # 서비스 시나리오
@@ -206,7 +206,7 @@ $ kubectl get service -n istio-system
 ![image](https://user-images.githubusercontent.com/119907154/217384306-099f7bad-ad25-4cf8-9ccd-5316a6593cf5.png)
 
 
-## Loggregation / Monitoring 
+## Log Agregation / Monitoring 
 
 
 
