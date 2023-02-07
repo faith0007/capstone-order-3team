@@ -110,6 +110,27 @@
 # 구현
 
 
+ - 분석/설계 단계에서 도출된 아키텍처에 따라, 각 마이크로 서비스들을 스프링부트로 구현하였다. 구현한 각 서비스를 로컬에서 실행하는 방법은 아래와 같다 (각자의 포트넘버는 8081 ~ 808n 이다)
+
+```
+cd order
+mvn spring-boot:run
+
+cd product
+mvn spring-boot:run 
+
+cd pay
+mvn spring-boot:run  
+
+cd delivery
+mvn spring-boot:run 
+
+cd notice
+mvn spring-boot:run 
+
+cd customercenter
+mvn spring-boot:run 
+```
 
 ## Saga (Pub-Sub)  
 
