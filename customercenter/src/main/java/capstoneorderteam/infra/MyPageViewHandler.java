@@ -26,10 +26,10 @@ public class MyPageViewHandler {
             // view 객체 생성
             MyPage myPage = new MyPage();
             // view 객체에 이벤트의 Value 를 set 함
-            myPage.setQuantity(ordered.getQuantity());
-            myPage.setStatus(Integer.parseInt(ordered.getStatus()));
-            myPage.setItem(Integer.parseInt(ordered.getItem()));
-            myPage.setOrderId(ordered.getId());
+            // myPage.setQuantity(ordered.getQuantity());
+            // myPage.setStatus(Integer.parseInt(ordered.getStatus()));
+            // myPage.setItem(Integer.parseInt(ordered.getItem()));
+            // myPage.setOrderId(ordered.getId());
             // view 레파지 토리에 save
             myPageRepository.save(myPage);
 
@@ -45,13 +45,13 @@ public class MyPageViewHandler {
             if (!orderCanceled.validate()) return;
                 // view 객체 조회
 
-                List<MyPage> myPageList = myPageRepository.findByOrderId(orderCanceled.getId());
-                for(MyPage myPage : myPageList){
-                    // view 객체에 이벤트의 eventDirectValue 를 set 함
-                    myPage.setStatus(Integer.parseInt(orderCanceled.getStatus()));
-                // view 레파지 토리에 save
-                myPageRepository.save(myPage);
-                }
+                // List<MyPage> myPageList = myPageRepository.findByOrderId(orderCanceled.getId());
+                // for(MyPage myPage : myPageList){
+                //     // view 객체에 이벤트의 eventDirectValue 를 set 함
+                //     myPage.setStatus(Integer.parseInt(orderCanceled.getStatus()));
+                // // view 레파지 토리에 save
+                // myPageRepository.save(myPage);
+                // }
 
         }catch (Exception e){
             e.printStackTrace();
@@ -63,13 +63,13 @@ public class MyPageViewHandler {
             if (!deliveryPrepared.validate()) return;
                 // view 객체 조회
 
-                List<MyPage> myPageList = myPageRepository.findByOrderId(deliveryPrepared.getOrderId());
-                for(MyPage myPage : myPageList){
-                    // view 객체에 이벤트의 eventDirectValue 를 set 함
-                    myPage.setStatus(1);
-                // view 레파지 토리에 save
-                myPageRepository.save(myPage);
-                }
+                // List<MyPage> myPageList = myPageRepository.findByOrderId(deliveryPrepared.getOrderId());
+                // for(MyPage myPage : myPageList){
+                //     // view 객체에 이벤트의 eventDirectValue 를 set 함
+                //     myPage.setStatus(1);
+                // // view 레파지 토리에 save
+                // myPageRepository.save(myPage);
+                // }
 
         }catch (Exception e){
             e.printStackTrace();

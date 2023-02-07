@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: order
-          image: username/order:latest
+          image: leesuhyung/order:latest
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -58,7 +58,7 @@ spec:
     spec:
       containers:
         - name: product
-          image: username/product:latest
+          image: leesuhyung/product:latest
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -98,7 +98,7 @@ spec:
     spec:
       containers:
         - name: pay
-          image: username/pay:latest
+          image: leesuhyung/pay:latest
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -138,7 +138,7 @@ spec:
     spec:
       containers:
         - name: notice
-          image: username/notice:latest
+          image: leesuhyung/notice:latest
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -178,7 +178,7 @@ spec:
     spec:
       containers:
         - name: customercenter
-          image: username/customercenter:latest
+          image: leesuhyung/customercenter:latest
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -218,7 +218,7 @@ spec:
     spec:
       containers:
         - name: delivery
-          image: username/delivery:latest
+          image: leesuhyung/delivery:latest
           ports:
             - containerPort: 8080
           readinessProbe:

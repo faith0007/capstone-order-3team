@@ -56,6 +56,7 @@ public class Pay  {
     
     private Long orderId;
 
+
     @PostPersist
     public void onPostPersist(){
 
@@ -65,14 +66,18 @@ public class Pay  {
 
 
 
-        PayCanceled payCanceled = new PayCanceled(this);
-        payCanceled.publishAfterCommit();
+        //PayCanceled payCanceled = new PayCanceled(this);
+        //payCanceled.publishAfterCommit();
 
     }
 
     public static PayRepository repository(){
         PayRepository payRepository = PayApplication.applicationContext.getBean(PayRepository.class);
         return payRepository;
+    }
+
+    public void approvePayment(Pay){
+
     }
 
 

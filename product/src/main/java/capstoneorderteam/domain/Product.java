@@ -17,7 +17,7 @@ public class Product  {
 
     
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    //@GeneratedValue(strategy=GenerationType.AUTO)
     
     
     
@@ -59,10 +59,12 @@ public class Product  {
     public void onPostPersist(){
 
 
-        DeliveryPrepared deliveryPrepared = new DeliveryPrepared(this);
-        deliveryPrepared.publishAfterCommit();
+        // DeliveryPrepared deliveryPrepared = new DeliveryPrepared(this);
+        // deliveryPrepared.publishAfterCommit();
 
     }
+
+    
 
     public static ProductRepository repository(){
         ProductRepository productRepository = ProductApplication.applicationContext.getBean(ProductRepository.class);
@@ -80,16 +82,22 @@ public class Product  {
 
         */
 
-        /** Example 2:  finding and process
+       
         
-        repository().findById(payApproved.get???()).ifPresent(product->{
+        repository().findById(payApproved.getItemcd()).ifPresent(product->{
             
-            product // do something
+            product.setTotalQuantity(product.getTotalQuantity() - payApproved.getOrderQty()); // do something
             repository().save(product);
 
+         DeliveryPrepared deliveryPrepared = new DeliveryPrepared();
+         deliveryPrepared.setOrderId(payApproved.getOrderId());
+         deliveryPrepared.setAddress(payApproved.getAddress());
+         deliveryPrepared.setItemcd(payApproved.getItemcd());
+         deliveryPrepared.setOrderQty(payApproved.getOrderQty());
+         deliveryPrepared.publishAfterCommit();
 
          });
-        */
+        
 
         
     }
@@ -101,16 +109,17 @@ public class Product  {
 
         */
 
-        /** Example 2:  finding and process
         
-        repository().findById(payCanceled.get???()).ifPresent(product->{
+        
+        repository().findById(payCanceled.getItemcd()).ifPresent(product->{
             
-            product // do something
+            // product // do something
+            product.setTotalQuantity(product.getTotalQuantity() + payCanceled.getOrderQty()); // do something
             repository().save(product);
 
 
          });
-        */
+        
 
         
     }
@@ -122,16 +131,16 @@ public class Product  {
 
         */
 
-        /** Example 2:  finding and process
         
-        repository().findById(orderCanceled.get???()).ifPresent(product->{
+        
+        repository().findById(orderCanceled.getItemcd()).ifPresent(product->{
             
-            product // do something
+            product.setTotalQuantity(product.getTotalQuantity() + orderCanceled.getOrderQty()); // do something
             repository().save(product);
 
 
          });
-        */
+        
 
         
     }
