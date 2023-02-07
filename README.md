@@ -116,7 +116,7 @@
 
 # 분석/설계
 
-### 완성된 1차 모형
+### 완성된 Event Storming 모형
 
 ![image](https://user-images.githubusercontent.com/119907154/217114338-1a0eb084-d6f6-4365-bb1e-87f5b1d7fe61.png)
 
