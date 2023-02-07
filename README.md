@@ -20,7 +20,7 @@
     - [Zero-downtime deploy (Readiness probe)]
     - [Persistence volume / ConfigMap / Secret]
     - [Self-healing (liveness probe)]
-    - [Apply Service Mesh](##Apply-Service-Messh)
+    - [Apply Service Mesh](#apply-service-Messh)
     - [Log aggregation / Monitoring]
 
 
