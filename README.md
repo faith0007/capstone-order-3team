@@ -208,10 +208,37 @@ $ kubectl get service -n istio-system
 
 ## Log Aggregation / Monitoring
 
+  - prometheus를 이용하여 메트릭 수집
+  - grafana를 이용하여 시각화
 
 
+```
+< 구성절차 >
+1) kubectl apply -f samples/addons                                                                 // add-on 설치
+2) kubectl patch service/prometheus -n istio-system -p '{"spec": {"type": "LoadBalancer"}}'        // prometheus IP 노출
+3) kubectl patch service/grafana -n istio-system -p '{"spec": {"type": "LoadBalancer"}}’           // grafana IP 노출
+
+```
 
 
+  - kiali 접근 URL 확인 (로드밸런서 타입으로 외부노출 후)
+
+```
+$ kubectl get service -n istio-system
+
+```
+
+![image](https://user-images.githubusercontent.com/119907154/217389261-256cbec9-4b80-402d-b4d7-c188bf28a6f6.png)
+
+
+  - prometheus 메트릭 수집 (istio_request_total)
+
+![image](https://user-images.githubusercontent.com/119907154/217389336-7fccf088-c760-48bb-bb75-1fe0be226aae.png)
+
+
+  - grafana 연동 (metric from prometheus)
+
+![image](https://user-images.githubusercontent.com/119907154/217389483-4a2fd823-5611-4cc4-8da1-16af52d312a9.png)
 
 
 
