@@ -21,7 +21,7 @@
     - [Persistence volume / ConfigMap / Secret]
     - [Self-healing (liveness probe)]
     - [Apply Service Mesh](#apply-service-Messh)
-    - [Log aggregation / Monitoring](#log-aggregation-/-monitoring)
+    - [Log aggregation / Monitoring](#log-aggregation--monitoring)
 
 
 # 서비스 시나리오
