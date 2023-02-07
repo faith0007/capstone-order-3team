@@ -52,13 +52,15 @@ public class Order  {
     @PostUpdate
     public void onPostUpdate(){
 
-        OrderCanceled orderCanceled = new OrderCanceled(this);
-        orderCanceled.publishAfterCommit();
+        // OrderCanceled orderCanceled = new OrderCanceled(this);
+        // orderCanceled.publishAfterCommit();
 
     }
 
     @PreRemove
     public void onPreRemove(){
+        OrderCanceled orderCanceled = new OrderCanceled(this);
+        orderCanceled.publishAfterCommit();
     }
 
     public static OrderRepository repository(){
