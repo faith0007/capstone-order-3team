@@ -254,11 +254,13 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 public interface OrderRepository extends PagingAndSortingRepository<Order, Long>{
 
 }
+```
 
 ## Application 테스트
 
-```
+
 - Application별 REST API 사용법
+
 ```
 [상품관리자 - 상품 추가하기]
 http POST localhost:8082/products itemcd="2" totalQuantity="100"
