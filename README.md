@@ -388,6 +388,216 @@ public static void orderInfoReceived(PayApproved payApproved){
 
 ## Persistence Volume/ConfigMap/Secret 
 
+- EFS(Elastic File System) 사용한 Persistent Volume 설정
+
+### 1. EFS 생성
+
+-     EFS를 사용할 EKS VPC 선택하여 생성
+
+![image](https://user-images.githubusercontent.com/119908993/217175091-983fabb4-1a80-4e47-9ffc-4c507079c5cb.png)
+![image](https://user-images.githubusercontent.com/119908993/217175159-e810adce-ebc3-44ce-8796-776e6ac1f4e6.png) 
+
+### 2. EFS 계정 생성 및 Role 바인딩
+
+-     ServerAccount 생성 (efs-sa.yaml)
+
+
+```
+ $ kubectl apply -f efs-sa.yaml
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: efs-provisioner
+```
+
+ 
+![image](https://user-images.githubusercontent.com/119908993/217180034-08028f5d-42a1-4df1-abe5-48d0b1885a72.png)
+
+
+-    ServerAccount(efs-provisioner) 권한 설정
+
+```
+#### kubectl apply -f efs-rbac.yaml
+
+
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: efs-provisioner-runner
+rules:
+  - apiGroups: [""]
+    resources: ["persistentvolumes"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get", "list", "watch", "update"]
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "update", "patch"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: run-efs-provisioner
+subjects:
+  - kind: ServiceAccount
+    name: efs-provisioner
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: efs-provisioner-runner
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: leader-locking-efs-provisioner
+rules:
+  - apiGroups: [""]
+    resources: ["endpoints"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: leader-locking-efs-provisioner
+subjects:
+  - kind: ServiceAccount
+    name: efs-provisioner
+roleRef:
+  kind: Role
+  name: leader-locking-efs-provisioner
+  apiGroup: rbac.authorization.k8s.io
+```
+
+### 3. EFS Provisioner 배포
+
+```
+ kubectl apply -f efs-provisioner-deploy.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: efs-provisioner
+  namespace: mall
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: efs-provisioner
+  template:
+    metadata:
+      labels:
+        app: efs-provisioner
+    spec:
+      serviceAccount: efs-provisioner
+      containers:
+        - name: efs-provisioner
+          image: quay.io/external_storage/efs-provisioner:latest
+          env:
+            - name: FILE_SYSTEM_ID
+              value: fs-0aaccb328f84992df
+            - name: AWS_REGION
+              value: eu-west-3
+            - name: PROVISIONER_NAME
+              value: my-aws.com/aws-efs
+          volumeMounts:
+            - name: pv-volume
+              mountPath: /persistentvolumes
+      volumes:
+        - name: pv-volume
+          nfs:
+            server: fs-0aaccb328f84992df.efs.eu-west-3.amazonaws.com
+            path: /
+```
+![image](https://user-images.githubusercontent.com/119908993/217183126-181e8d31-8386-446c-9291-4f664369a96e.png)
+
+### 4. StorageClass 생성
+
+```
+ kubectl apply -f efs-provisioner-deploy.yaml
+
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: aws-efs
+provisioner: my-aws.com/aws-efs
+```
+![image](https://user-images.githubusercontent.com/119908993/217183745-0c62c4fb-d322-48a0-b886-a0e5909bb4cb.png)
+
+###5. PVC(PersistentVolumeClaim) 생성
+
+```
+ kubectl apply -f volume-PVC.yaml
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: aws-efs
+  labels:
+    app: test-pvc
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Mi
+  storageClassName: aws-efs
+```
+![image](https://user-images.githubusercontent.com/119908993/217190198-3fd67fc2-f292-48f0-9351-f090681f0e31.png)
+
+###6. order pod 에 pvc 적용
+
+```
+ kubectl apply -f deployment.yaml
+
+          volumeMounts:
+          - mountPath: "/mnt/aws"
+            name: volume
+      volumes:
+        - name: volume
+          persistentVolumeClaim:
+            claimName: aws-efs
+```
+![image](https://user-images.githubusercontent.com/119908993/217205590-6c97aeb5-adbc-4c67-8819-53a01edebe30.png)
+
+![image](https://user-images.githubusercontent.com/119908993/217205504-86533f87-4130-479a-9db8-6ed70eebcf10.png)
+
+# Self-healing (liveness probe)
+
+### order pod 실행 후 /tmp 디렉토리 healthy 체크하여 처리
+
+#### /order/kubernetes/deployment.yaml
+```
+          livenessProbe:
+            exec:
+              command:
+              - cat
+              - /tmp/healthy
+            initialDelaySeconds: 30
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 10
+```
+
+#### order pod 생성
+
+![image](https://user-images.githubusercontent.com/119908993/217396439-405777d3-3371-4cbf-aa53-1422bf4b41aa.png)
+
+#### order pod /tmp/health 삭제
+
+![image](https://user-images.githubusercontent.com/119908993/217396679-0b541379-aa88-45b7-a7fb-b9847ee6dfac.png)
+
+#### /tmp/health 삭제 후 order pod restart 확인
+![image](https://user-images.githubusercontent.com/119908993/217396803-1dc7cb86-d1ca-4e43-adf2-4337b59c61f8.png)
+
+
 
 
 ## Self-healing (liveness probe) 
