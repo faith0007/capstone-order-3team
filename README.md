@@ -19,12 +19,12 @@
     - [Gateway / Ingress]
     - [Deploy / Pipeline]
     - [Autoscale (HPA)](#autoscale-hpa)
-    - [Zero-downtime deploy (Readiness probe)](#zerodowntime-deploy-readiness-probe)
+    - [Zero-downtime deploy (Readiness probe)](#zero-downtime-deploy-readiness-probe)
     - [Persistence volume / ConfigMap / Secret](#persistence-volumeconfigmapsecret)
     - [Self-healing (liveness probe)](#self-healing-liveness-probe)
     - [Apply Service Mesh](#apply-service-Messh)
     - [Log aggregation / Monitoring](#log-aggregation--monitoring)
-
+Zero-downtime deploy (Readiness probe)
 
 # 서비스 시나리오
 
