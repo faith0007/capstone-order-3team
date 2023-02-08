@@ -66,24 +66,31 @@
 
 
 
-### 요구사항을 커버리지 검증
+### 요구사항 커버리지 검증
 
 
-
-
-![image](https://user-images.githubusercontent.com/119907154/217403322-6f5710d5-619b-4817-96c4-5876846b7edd.png)
+< 주문 >
 
     - 고객이 메뉴를 선택하여 주문한다
     - 고객이 결제한다 
     - 결재가 되면 상품이 준비된다
     - 상품이 준비되면 배송이 요청된다
 
-![image](https://user-images.githubusercontent.com/119907154/217403404-b96f20a3-01a4-4c12-98a9-c07271d37348.png)
+![image](https://user-images.githubusercontent.com/119907154/217403322-6f5710d5-619b-4817-96c4-5876846b7edd.png)
+
+
+    
+
+< 주문 취소 >
 
     - 고객이 주문을 취소한다
     - 주문이 취소되면 결재가 취소된다
     - 결재가 취소되면 상품준비가 취소된다
     - 결재가 취소되면 배송이 취소된다
+
+
+![image](https://user-images.githubusercontent.com/119907154/217403404-b96f20a3-01a4-4c12-98a9-c07271d37348.png)
+
 
 
 
