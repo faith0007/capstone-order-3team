@@ -20,8 +20,8 @@
     - [Deploy / Pipeline]
     - [Autoscale (HPA)]
     - [Zero-downtime deploy (Readiness probe)]
-    - [Persistence volume / ConfigMap / Secret]
-    - [Self-healing (liveness probe)]
+    - [Persistence volume / ConfigMap / Secret](#persistence-volumeconfigmapsecret)
+    - [Self-healing (liveness probe)](#self-healing-liveness-probe)
     - [Apply Service Mesh](#apply-service-Messh)
     - [Log aggregation / Monitoring](#log-aggregation--monitoring)
 
@@ -569,12 +569,16 @@ spec:
 
 ![image](https://user-images.githubusercontent.com/119908993/217205504-86533f87-4130-479a-9db8-6ed70eebcf10.png)
 
-# Self-healing (liveness probe)
 
-### order pod 실행 후 /tmp 디렉토리 healthy 체크하여 처리
 
-#### /order/kubernetes/deployment.yaml
+## Self-healing (liveness probe) 
+
+
+- order pod 실행 후 /tmp 디렉토리 healthy 체크하여 처리
+
 ```
+ /order/kubernetes/deployment.yaml
+
           livenessProbe:
             exec:
               command:
@@ -586,21 +590,21 @@ spec:
             failureThreshold: 10
 ```
 
-#### order pod 생성
+- order pod 생성
 
 ![image](https://user-images.githubusercontent.com/119908993/217396439-405777d3-3371-4cbf-aa53-1422bf4b41aa.png)
 
-#### order pod /tmp/health 삭제
+- order pod /tmp/health 삭제
 
 ![image](https://user-images.githubusercontent.com/119908993/217396679-0b541379-aa88-45b7-a7fb-b9847ee6dfac.png)
 
-#### /tmp/health 삭제 후 order pod restart 확인
+- /tmp/health 삭제 후 order pod restart 확인
 ![image](https://user-images.githubusercontent.com/119908993/217396803-1dc7cb86-d1ca-4e43-adf2-4337b59c61f8.png)
 
 
 
 
-## Self-healing (liveness probe) 
+
 
 
 
