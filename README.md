@@ -12,7 +12,7 @@
   - [구현:](#구현)
     - [구현 개요](#구현 개요)
     - [Application 테스트](#application-테스트)
-    - [Saga (Pub-Sub)]
+    - [Saga (Pub-Sub)](#saga-(pub-sub))
     - [CQRS]
     - [Compensation & Correlation](#compensation--correlation)
   - [운영](#운영)
@@ -307,7 +307,47 @@ http POST localhost:8086/deliveries/1/deliverycompleted test=1
 ## Saga (Pub-Sub)  
 
 
+- Saga (Pub-Sub) 구조 구현 예시 (product 서비스) 
+  - 결제정보 이벤트를 수신하면 product의 수량정보를 수정한후 배송시작 이벤트를 발생한다
+```
+  @StreamListener(value=KafkaProcessor.INPUT, condition="headers['type']=='PayApproved'")
+    public void wheneverPayApproved_OrderInfoReceived(@Payload PayApproved payApproved){
 
+        PayApproved event = payApproved;
+        System.out.println("\n\n##### listener OrderInfoReceived : " + payApproved + "\n\n");
+
+        // Sample Logic //
+        Product.orderInfoReceived(event);     
+
+    }
+
+public static void orderInfoReceived(PayApproved payApproved){
+
+        /** Example 1:  new item 
+        Product product = new Product();
+        repository().save(product);
+
+        */
+
+       
+        
+        repository().findById(payApproved.getItemcd()).ifPresent(product->{
+            
+            product.setTotalQuantity(product.getTotalQuantity() - payApproved.getOrderQty()); // do something
+            repository().save(product);
+
+         DeliveryPrepared deliveryPrepared = new DeliveryPrepared();
+         deliveryPrepared.setOrderId(payApproved.getOrderId());
+         deliveryPrepared.setId(payApproved.getId());
+         deliveryPrepared.setAddress(payApproved.getAddress());
+         deliveryPrepared.setItemcd(payApproved.getItemcd());
+         deliveryPrepared.setOrderQty(payApproved.getOrderQty());
+         deliveryPrepared.publishAfterCommit();
+
+         });
+        
+    }
+```
 
 
 ## CQRS
