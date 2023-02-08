@@ -20,7 +20,7 @@
     - [Deploy / Pipeline](#deploy--pipeline)
     - [Autoscale (HPA)](#autoscale-hpa)
     - [Zero-downtime deploy (Readiness probe)](#zero-downtime-deploy-readiness-probe)
-    - [Persistence volume / ConfigMap / Secret](#persistence-volumeconfigmapsecret)
+    - [Persistence volume](#persistence-volume)
     - [Self-healing (liveness probe)](#self-healing-liveness-probe)
     - [Apply Service Mesh](#apply-service-Messh)
     - [Log aggregation / Monitoring](#log-aggregation--monitoring)
@@ -546,7 +546,7 @@ Concurrency:                    0.07
 =>  배포기간 동안 Availabilty가 변화없기 때문에 무정지 재배포가 성공한 것으로 확인됨
 
 
-## Persistence Volume/ConfigMap/Secret 
+## Persistence Volume
 
 - EFS(Elastic File System) 사용한 Persistent Volume 설정
 
