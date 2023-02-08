@@ -795,6 +795,14 @@ $ kubectl get ns -L istio-injection
 ![image](https://user-images.githubusercontent.com/119907154/217383342-e54e607a-a7fe-4be1-8a04-5c2268bd5836.png)
 
 
+ - sidecar패턴을통해 pod당 2개의 컨테이너 기동확인
+  
+```
+$ kubectl get all
+```
+![image](https://user-images.githubusercontent.com/119907154/217435389-2aa08622-6929-46de-bd5a-34ab22778077.png)
+
+
   - kiali 접근 URL 확인 (로드밸런서 타입으로 외부노출 후)
 
 ```
