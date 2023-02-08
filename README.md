@@ -12,7 +12,7 @@
   - [구현:](#구현)
     - [Saga (Pub-Sub)]
     - [CQRS]
-    - [Compensation & Correlation]
+    - [Compensation & Correlation](#compensation-&-correlation)
   - [운영](#운영)
     - [Gateway / Ingress]
     - [Deploy / Pipeline]
@@ -145,6 +145,10 @@ mvn spring-boot:run
 
 ## Compensation & Correlation
 
+
+- 결제취소(주문취소)이벤트 발생시 product 수량정보를 보정하도록 아래와 같이 구현
+
+![image](https://user-images.githubusercontent.com/120017873/217170390-14c20c19-e3ef-4962-aac2-0a28b2311587.png)
 
 
 
