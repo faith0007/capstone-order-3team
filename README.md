@@ -392,14 +392,14 @@ public static void orderInfoReceived(PayApproved payApproved){
 
 ### 1. EFS 생성
 
--     EFS를 사용할 EKS VPC 선택하여 생성
+- EFS를 사용할 EKS VPC 선택하여 생성
 
 ![image](https://user-images.githubusercontent.com/119908993/217175091-983fabb4-1a80-4e47-9ffc-4c507079c5cb.png)
 ![image](https://user-images.githubusercontent.com/119908993/217175159-e810adce-ebc3-44ce-8796-776e6ac1f4e6.png) 
 
 ### 2. EFS 계정 생성 및 Role 바인딩
 
--     ServerAccount 생성 (efs-sa.yaml)
+- ServerAccount 생성 (efs-sa.yaml)
 
 
 ```
@@ -415,7 +415,7 @@ metadata:
 ![image](https://user-images.githubusercontent.com/119908993/217180034-08028f5d-42a1-4df1-abe5-48d0b1885a72.png)
 
 
--    ServerAccount(efs-provisioner) 권한 설정
+- ServerAccount(efs-provisioner) 권한 설정
 
 ```
 #### kubectl apply -f efs-rbac.yaml
