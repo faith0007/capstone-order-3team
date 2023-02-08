@@ -16,15 +16,15 @@
     - [CQRS]
     - [Compensation & Correlation](#compensation--correlation)
   - [운영](#운영)
-    - [Gateway / Ingress]
-    - [Deploy / Pipeline]
+    - [Gateway / Ingress](#gateway--ingress)
+    - [Deploy / Pipeline](#deploy--pipeline)
     - [Autoscale (HPA)](#autoscale-hpa)
     - [Zero-downtime deploy (Readiness probe)](#zero-downtime-deploy-readiness-probe)
     - [Persistence volume / ConfigMap / Secret](#persistence-volumeconfigmapsecret)
     - [Self-healing (liveness probe)](#self-healing-liveness-probe)
     - [Apply Service Mesh](#apply-service-Messh)
     - [Log aggregation / Monitoring](#log-aggregation--monitoring)
-Zero-downtime deploy (Readiness probe)
+
 
 # 서비스 시나리오
 
@@ -370,11 +370,19 @@ public static void orderInfoReceived(PayApproved payApproved){
 
 ## Gateway / Ingress
 
+- MSA Ezy Project에서 제공해주는 Gateway 구현 서비스를 사용하여 pjt를 수행하였으며, 팀에서 별도 구현은 하지않음.
 
 
 
 
 ## Deploy / Pipeline
+
+- 별도의 파이프라인 구성하지않고 Manually 배포함
+
+```
+yaml 파일 편집후
+kubectl apply -f 파일명
+```
 
 
 
