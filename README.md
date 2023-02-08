@@ -418,8 +418,8 @@ metadata:
 - ServerAccount(efs-provisioner) 권한 설정
 
 ```
-#### kubectl apply -f efs-rbac.yaml
-
+ $ kubectl apply -f efs-rbac.yaml
+ 
 
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
@@ -477,7 +477,7 @@ roleRef:
 ### 3. EFS Provisioner 배포
 
 ```
- kubectl apply -f efs-provisioner-deploy.yaml
+ $ kubectl apply -f efs-provisioner-deploy.yaml
 
 apiVersion: apps/v1
 kind: Deployment
@@ -521,7 +521,7 @@ spec:
 ### 4. StorageClass 생성
 
 ```
- kubectl apply -f efs-provisioner-deploy.yaml
+ $ kubectl apply -f efs-provisioner-deploy.yaml
 
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
@@ -534,7 +534,7 @@ provisioner: my-aws.com/aws-efs
 ###5. PVC(PersistentVolumeClaim) 생성
 
 ```
- kubectl apply -f volume-PVC.yaml
+ $ kubectl apply -f volume-PVC.yaml
 
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -555,7 +555,7 @@ spec:
 ###6. order pod 에 pvc 적용
 
 ```
- kubectl apply -f deployment.yaml
+ $ kubectl apply -f deployment.yaml
 
           volumeMounts:
           - mountPath: "/mnt/aws"
