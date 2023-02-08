@@ -19,7 +19,7 @@
     - [Gateway / Ingress]
     - [Deploy / Pipeline]
     - [Autoscale (HPA)](#autoscale-hpa)
-    - [Zero-downtime deploy (Readiness probe)]
+    - [Zero-downtime deploy (Readiness probe)](#zerodowntime-deploy-readiness-probe)
     - [Persistence volume / ConfigMap / Secret](#persistence-volumeconfigmapsecret)
     - [Self-healing (liveness probe)](#self-healing-liveness-probe)
     - [Apply Service Mesh](#apply-service-Messh)
@@ -401,7 +401,6 @@ siege -c50 -t60S -v http://order:8080/orders
 kubectl get deploy order -w
 ```
 
-![image](https://user-images.githubusercontent.com/119907154/217400342-c1a55982-00cf-404c-b9e9-de06ef4746f3.png)
 
 
 - 어느정도 시간이 흐른 후 스케일 아웃이 벌어지는 것을 확인할 수 있다
@@ -436,6 +435,68 @@ Concurrency:                   21.62
 
 ## Zero-downtime deploy (Readiness probe)
 
+- 먼저 무정지 재배포가 100% 되는 것인지 확인하기 위해서 Autoscaler이나 CB 설정을 제거함
+- seige로 배포작업 직전에 워크로드를 모니터링 함
+
+```
+root@siege:/# siege -c1 -t60S -v http://order:8080/orders --delay=1S
+** SIEGE 4.0.4
+** Preparing 1 concurrent users for battle.
+The server is now under siege...
+HTTP/1.1 200     0.03 secs:     291 bytes ==> GET  /orders
+HTTP/1.1 200     0.03 secs:     291 bytes ==> GET  /orders
+HTTP/1.1 200     0.03 secs:     291 bytes ==> GET  /orders
+HTTP/1.1 200     0.01 secs:     291 bytes ==> GET  /orders
+```
+
+- 새 버전으로의 배포 시작
+
+```
+kubectl get deployment.yaml
+```
+
+- seige의 화면으로 넘어가서 Availability가 100% 미만으로 떨어졌는지 확인
+
+```
+Transactions:                     81 hits
+Availability:                  72.32 %
+Elapsed time:                  59.32 secs
+Data transferred:               0.03 MB
+Response time:                  0.08 secs
+Transaction rate:               1.37 trans/sec
+Throughput:                     0.00 MB/sec
+Concurrency:                    0.11
+```
+
+- 배포기간 중 Availablity가 평소 100%에서 70%대로 떨어지는 것을 확인. 
+- 원인은 쿠버네티스가 성급하게 새로 올려진 서비스를 READY 상태로 인식하여 서비스 유입을 진행한 거시기 때문이며, 이를 막기위해 Readiness Probe를 설정함
+
+```
+readinessProbe:
+            httpGet:
+              path: '/actuator/health'
+              port: 8080
+            initialDelaySeconds: 30
+            timeoutSeconds: 2
+            periodSeconds: 5
+            failureThreshold: 10![image](https://user-images.githubusercontent.com/119907154/217401149-2b6fdf24-eedf-44f6-8109-cf1cb56d6c85.png)
+```
+
+- 동일한 시나리오로 재배포 한 후 Availability 확인
+
+
+```
+Transactions:                    111 hits
+Availability:                 100.00 %
+Elapsed time:                  59.52 secs
+Data transferred:               0.03 MB
+Response time:                  0.04 secs
+Transaction rate:               1.86 trans/sec
+Throughput:                     0.00 MB/sec
+Concurrency:                    0.07
+```
+
+=>  배포기간 동안 Availabilty가 변화없기 때문에 무정지 재배포가 성공한 것으로 확인됨
 
 
 ## Persistence Volume/ConfigMap/Secret 
