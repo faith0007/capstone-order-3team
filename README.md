@@ -406,6 +406,7 @@ kubectl get deploy order -w
 
 - 어느정도 시간이 흐른 후 스케일 아웃이 벌어지는 것을 확인할 수 있다
 
+```
 NAME    READY   UP-TO-DATE   AVAILABLE   AGE
 ------------------------------------------------
 order   1/4     1            1           2m3s
@@ -417,6 +418,7 @@ order   1/8     3            1           2m17s
 order   1/8     3            1           2m17s
 order   1/8     6            1           2m17s
 order   1/10    6            1           2m32s
+```
 
 - siege의 로그를 보아도 전체적인 성공률이 높아진 것을 확인 할 수 있다.
 
