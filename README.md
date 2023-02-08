@@ -13,7 +13,7 @@
     - [구현 개요](#구현-개요)
     - [Application 테스트](#application-테스트)
     - [Saga (Pub-Sub)](#saga-pub-sub)
-    - [CQRS]
+    - [CQRS](#cqrs)
     - [Compensation & Correlation](#compensation--correlation)
   - [운영](#운영)
     - [Gateway / Ingress](#gateway--ingress)
@@ -342,6 +342,54 @@ public static void orderInfoReceived(PayApproved payApproved){
 
 
 ## CQRS
+
+- Notice 서비스를 통해 고객의 주문 및 배송정보를 실시간으로 조회할 수 있도록 구현하였다.
+
+        package capstoneorderteam.infra;
+        ...
+        @Service
+        @Transactional
+        public class PolicyHandler{
+        
+            @StreamListener(value=KafkaProcessor.INPUT, condition="headers['type']=='OrderCanceled'")
+            public void wheneverOrderCanceled_KakaoNotice(@Payload OrderCanceled orderCanceled){
+                OrderCanceled event = orderCanceled;
+                System.out.println("\n\n##### listener KakaoNotice : " + orderCanceled + "\n\n");
+            }
+        
+            @StreamListener(value=KafkaProcessor.INPUT, condition="headers['type']=='Ordered'")
+            public void wheneverOrdered_KakaoNotice(@Payload Ordered ordered){
+                Ordered event = ordered;
+                System.out.println("\n\n##### listener KakaoNotice : " + ordered + "\n\n");
+            }
+        
+            @StreamListener(value=KafkaProcessor.INPUT, condition="headers['type']=='DeliveryPrepared'")
+            public void wheneverDeliveryPrepared_KakaoNotice(@Payload DeliveryPrepared deliveryPrepared){
+                DeliveryPrepared event = deliveryPrepared;
+                System.out.println("\n\n##### listener KakaoNotice : " + deliveryPrepared + "\n\n");
+            }
+        
+            @StreamListener(value=KafkaProcessor.INPUT, condition="headers['type']=='DeliveryCompleted'")
+            public void wheneverDeliveryCompleted_KakaoNotice(@Payload DeliveryCompleted deliveryCompleted){
+                DeliveryCompleted event = deliveryCompleted;
+                System.out.println("\n\n##### listener KakaoNotice : " + deliveryCompleted + "\n\n");
+            }
+        
+            @StreamListener(value=KafkaProcessor.INPUT, condition="headers['type']=='DeliveryCanceled'")
+            public void wheneverDeliveryCanceled_KakaoNotice(@Payload DeliveryCanceled deliveryCanceled){
+                DeliveryCanceled event = deliveryCanceled;
+                System.out.println("\n\n##### listener KakaoNotice : " + deliveryCanceled + "\n\n");
+            }
+        }
+
+
+- 적용 후 REST API 테스트
+        주문 취소(OrderCanceled) 이벤트 발생 시 해당 주문정보를 확인한다.
+
+        http DELETE localhost:8081/orders/3       
+
+![image](https://user-images.githubusercontent.com/120072981/217403424-ec2062d3-2040-44ca-990f-4dd6e6722df6.png)
+
 
 
 
