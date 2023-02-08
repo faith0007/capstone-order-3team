@@ -12,7 +12,7 @@
   - [구현:](#구현)
     - [Saga (Pub-Sub)]
     - [CQRS]
-    - [Compensation & Correlation](#compensation-&-correlation)
+    - [Compensation & Correlation](#compensation--correlation)
   - [운영](#운영)
     - [Gateway / Ingress]
     - [Deploy / Pipeline]
