@@ -800,7 +800,7 @@ $ kubectl get ns -L istio-injection
 ```
 $ kubectl get all
 ```
-![image](https://user-images.githubusercontent.com/119907154/217435389-2aa08622-6929-46de-bd5a-34ab22778077.png)
+![image](https://user-images.githubusercontent.com/119907154/217435643-cdbd1b69-9bce-471b-b963-a50c5ae15daf.png)
 
 
   - kiali 접근 URL 확인 (로드밸런서 타입으로 외부노출 후)
