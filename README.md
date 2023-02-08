@@ -10,6 +10,8 @@
   - [서비스 시나리오](#서비스-시나리오)
   - [분석/설계](#분석설계)
   - [구현:](#구현)
+    - [구현 개요](#구현 개요)
+    - [Application 테스트](#application-테스트)
     - [Saga (Pub-Sub)]
     - [CQRS]
     - [Compensation & Correlation](#compensation--correlation)
@@ -109,8 +111,10 @@
 
 # 구현
 
+## 구현 개요
 
- - 분석/설계 단계에서 도출된 아키텍처에 따라, 각 마이크로 서비스들을 스프링부트로 구현하였다. 구현한 각 서비스를 로컬에서 실행하는 방법은 아래와 같다 (각자의 포트넘버는 8081 ~ 808n 이다)
+
+분석/설계 단계에서 도출된 아키텍처에 따라, 각 마이크로 서비스들을 스프링부트로 구현하였다. 구현한 각 서비스를 로컬에서 실행하는 방법은 아래와 같다 (각자의 포트넘버는 8081 ~ 808n 이다)
 
 ```
 cd order
@@ -131,6 +135,174 @@ mvn spring-boot:run
 cd customercenter
 mvn spring-boot:run 
 ```
+
+## DDD 의 적용
+
+- 각 서비스내에 도출된 핵심 Aggregate Root 객체 Entity 들을 아래와 같이 생성함( 예시 : order)
+- order, pay, product, delivery, notice  등 동일하게 생성
+
+```
+package capstoneorderteam.domain;
+
+import capstoneorderteam.domain.Ordered;
+import capstoneorderteam.domain.OrderCanceled;
+import capstoneorderteam.OrderApplication;
+import javax.persistence.*;
+import java.util.List;
+import lombok.Data;
+import java.util.Date;
+
+
+@Entity
+@Table(name="Order_table")
+@Data
+
+public class Order  {
+    
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+
+    private Long id;
+    private String item;
+    private Integer orderQty;
+    private String status;
+    private Long price;
+    private Integer itemcd;
+
+    @PostPersist
+    public void onPostPersist(){
+
+        //Following code causes dependency to external APIs
+        // it is NOT A GOOD PRACTICE. instead, Event-Policy mapping is recommended.
+
+
+        capstoneorderteam.external.Pay pay = new capstoneorderteam.external.Pay();
+        
+        pay.setPrice(price);
+        pay.setStatus(status);
+        pay.setItemcd(itemcd);
+        pay.setOrderQty(orderQty);
+        pay.setOrderId(id);
+
+        // mappings goes here
+        OrderApplication.applicationContext.getBean(capstoneorderteam.external.PayService.class)
+            .approvePayment(pay);
+
+        Ordered ordered = new Ordered(this);
+        ordered.publishAfterCommit();
+
+    }
+
+    @PostUpdate
+    public void onPostUpdate(){
+
+        // OrderCanceled orderCanceled = new OrderCanceled(this);
+        // orderCanceled.publishAfterCommit();
+
+    }
+
+    @PreRemove
+    public void onPreRemove(){
+        OrderCanceled orderCanceled = new OrderCanceled(this);
+        orderCanceled.publishAfterCommit();
+    }
+
+    public static OrderRepository repository(){
+        OrderRepository orderRepository = OrderApplication.applicationContext.getBean(OrderRepository.class);
+        return orderRepository;
+    }
+
+
+
+
+    public static void orderStatusModify(DeliveryPrepared deliveryPrepared){
+
+        /** Example 1:  new item 
+        Order order = new Order();
+        repository().save(order);
+
+        */
+
+              
+        repository().findById(deliveryPrepared.getOrderId()).ifPresent(order->{
+            
+            order.setStatus("deliveryPrepared");
+            repository().save(order);
+
+
+         });
+      
+
+        
+    }
+
+
+}
+
+
+
+```
+- Entity Pattern 과 Repository Pattern 을 적용하여 JPA 를 통하여 다양한 데이터소스 유형 (RDB or NoSQL) 에 대한 별도의 처리가 없도록 데이터 접근 어댑터를 자동 생성하기 위하여 Spring Data REST 의 RestRepository 를 적용하였다
+```
+package capstoneorderteam.domain;
+
+import capstoneorderteam.domain.*;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+
+@RepositoryRestResource(collectionResourceRel="orders", path="orders")
+public interface OrderRepository extends PagingAndSortingRepository<Order, Long>{
+
+}
+
+## Application 테스트
+
+```
+- Application별 REST API 사용법
+```
+[상품관리자 - 상품 추가하기]
+http POST localhost:8082/products itemcd="2" totalQuantity="100"
+```
+![image](https://user-images.githubusercontent.com/120017873/217167782-83ee2ff4-7a72-487b-bab8-f9f1d8d7e975.png)
+
+```
+[상품관리자 - 상품 수량 확인]
+http GET localhost:8082/products/2
+```
+![image](https://user-images.githubusercontent.com/120017873/217167863-29c0265b-8a1f-4a4a-871b-f1b5747579fd.png)
+```
+[고객 - 주문하기]
+http POST localhost:8081/orders item="milk" orderQty="1" status="ordered" price="2000" itemcd="2" 
+```
+![image](https://user-images.githubusercontent.com/120017873/217167910-32e9c96b-92da-48ea-a772-79c290b1c63a.png)
+```
+[고객 - 주문내역확인]
+http GET localhost:8081/orders/3
+```
+![image](https://user-images.githubusercontent.com/120017873/217167986-0b2c50f5-ce20-4fec-a607-c090bdcb934d.png)
+```
+
+[고객 - 결제하기]
+http POST localhost:8083/pays orderId="3" item="milk" orderQty="1" status="ordered" price="2000" itemcd="2" 
+```
+![image](https://user-images.githubusercontent.com/120017873/217168043-1a4185c6-9b13-4a61-ad1c-f3eecd9e66e0.png)
+```
+[고객 주문취소하기]
+http DELETE localhost:8081/orders/3
+```
+![image](https://user-images.githubusercontent.com/120017873/217168257-fa12cf06-7a55-48aa-98ec-68fa5da6bb6f.png)
+```
+
+[배송업체 - 배송상태 변경하기(배송시작, 배송완료)]
+http POST localhost:8086/deliveries/1/deliverystarted test=1
+```
+![image](https://user-images.githubusercontent.com/120017873/217168132-4cf574fd-81b9-483f-aa9d-1c08f53b76bf.png)
+```
+
+http POST localhost:8086/deliveries/1/deliverycompleted test=1
+```
+![image](https://user-images.githubusercontent.com/120017873/217168197-08e5e894-745e-4f04-8679-c534d8609384.png)
+
 
 ## Saga (Pub-Sub)  
 
