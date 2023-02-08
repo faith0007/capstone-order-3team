@@ -411,7 +411,7 @@ public static void orderInfoReceived(PayApproved payApproved){
 
 - MSA Ezy Project에서 제공해주는 Gateway 구현 서비스를 사용하여 pjt를 수행하였으며, 팀에서 별도 구현은 하지않음.
 
-
+- gateway 서비스를 포함된 deploy.yaml을 통해 클러스터에 pod로 올림
 ![image](https://user-images.githubusercontent.com/119908993/217457128-77136d5b-0652-4e83-a4ac-370a24da579c.png)
 
 
