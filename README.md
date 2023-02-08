@@ -18,7 +18,7 @@
   - [운영](#운영)
     - [Gateway / Ingress]
     - [Deploy / Pipeline]
-    - [Autoscale (HPA)]
+    - [Autoscale (HPA)](#autoscale-hpa)
     - [Zero-downtime deploy (Readiness probe)]
     - [Persistence volume / ConfigMap / Secret](#persistence-volumeconfigmapsecret)
     - [Self-healing (liveness probe)](#self-healing-liveness-probe)
@@ -380,6 +380,56 @@ public static void orderInfoReceived(PayApproved payApproved){
 
 ## Autoscale (HPA)
 
+- 앞서 CB 는 시스템을 안정되게 운영할 수 있게 해줬지만 사용자의 요청을 100% 받아들여주지 못했기 때문에 이에 대한 보완책으로 자동화된 확장 기능을 적용하고자 한다.
+
+- 주문서비스에 대한 replica를 동적으로 늘려주도록 HPA를 설정한다. 
+- 설정은 CPU 사용량이 20프로를 넘어서면 replic를 10개까지 늘려준다.
+
+```
+kubectl autoscale deploy order -cpu-percent=20 --min=1 --max=10
+```
+
+- 워크로드를 60초 동안 걸어준다.
+
+```
+siege -c50 -t60S -v http://order:8080/orders
+```
+
+- 오토스케일이 어떻게 되고 있는지 모니터링을 걸어준다:
+
+```
+kubectl get deploy order -w
+```
+
+![image](https://user-images.githubusercontent.com/119907154/217400342-c1a55982-00cf-404c-b9e9-de06ef4746f3.png)
+
+
+- 어느정도 시간이 흐른 후 스케일 아웃이 벌어지는 것을 확인할 수 있다
+
+NAME    READY   UP-TO-DATE   AVAILABLE   AGE
+------------------------------------------------
+order   1/4     1            1           2m3s
+order   1/4     1            1           2m3s
+order   1/4     3            1           2m3s
+order   1/8     3            1           2m17s
+order   1/8     3            1           2m17s
+order   1/8     3            1           2m17s
+order   1/8     3            1           2m17s
+order   1/8     6            1           2m17s
+order   1/10    6            1           2m32s
+
+- siege의 로그를 보아도 전체적인 성공률이 높아진 것을 확인 할 수 있다.
+
+```
+Transactions:                    498 hits
+Availability:                 100.00 %
+Elapsed time:                  61.33 secs
+Data transferred:               0.15 MB
+Response time:                  2.66 secs
+Transaction rate:               8.12 trans/sec
+Throughput:                     0.00 MB/sec
+Concurrency:                   21.62
+```
 
 
 ## Zero-downtime deploy (Readiness probe)
