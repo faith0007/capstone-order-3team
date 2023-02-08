@@ -599,6 +599,7 @@ spec:
 ![image](https://user-images.githubusercontent.com/119908993/217396679-0b541379-aa88-45b7-a7fb-b9847ee6dfac.png)
 
 - /tmp/health 삭제 후 order pod restart 확인
+
 ![image](https://user-images.githubusercontent.com/119908993/217396803-1dc7cb86-d1ca-4e43-adf2-4337b59c61f8.png)
 
 
