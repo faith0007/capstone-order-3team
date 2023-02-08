@@ -12,7 +12,7 @@
   - [구현:](#구현)
     - [구현 개요](#구현 개요)
     - [Application 테스트](#application-테스트)
-    - [Saga (Pub-Sub)](#saga-(pub-sub))
+    - [Saga (Pub-Sub)](#saga-pub-sub)
     - [CQRS]
     - [Compensation & Correlation](#compensation--correlation)
   - [운영](#운영)
